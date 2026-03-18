@@ -1,0 +1,12 @@
+FROM gcr.io/kaggle-images/python:{{ kaggle_image_version }}
+
+# Install uv for fast package management
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Install packages not in Kaggle base image
+RUN pip install --no-cache-dir \
+    "hydra-core>=1.3" \
+    "omegaconf"
+
+WORKDIR /kaggle/working
+CMD ["/bin/bash"]
