@@ -1,0 +1,56 @@
+_templates_suffix: ""
+_subdirectory: template
+_answers_file: .copier-answers.yml
+
+# --- Questions ---
+
+project_name:
+  type: str
+  help: "Kaggle competition/project name (e.g., titanic-survival)"
+  validator: >-
+    {% if not (project_name | regex_search('^[a-zA-Z0-9][a-zA-Z0-9_-]*$')) %}
+    {{ project_name }} is not a valid project name. Use alphanumeric characters, hyphens, and underscores only.
+    {% endif %}
+
+kaggle_competition:
+  type: str
+  help: "Kaggle competition slug for API (e.g., titanic)"
+  default: "{{ project_name }}"
+
+kaggle_username:
+  type: str
+  help: "Your Kaggle username"
+  validator: >-
+    {% if not kaggle_username %}
+    Kaggle username is required.
+    {% endif %}
+
+wandb_project:
+  type: str
+  help: "Weights & Biases project name"
+  default: "{{ project_name }}"
+
+wandb_entity:
+  type: str
+  help: "Weights & Biases entity (username or team)"
+  default: "{{ kaggle_username }}"
+
+author_name:
+  type: str
+  help: "Author name"
+  validator: >-
+    {% if not author_name %}
+    Author name is required.
+    {% endif %}
+
+kaggle_image_version:
+  type: str
+  help: "Kaggle GPU image version tag (e.g., v160)"
+  default: "v160"
+
+# --- Computed (not prompted) ---
+
+package_name:
+  type: str
+  default: "{{ project_name | replace('-', '_') }}"
+  when: false
