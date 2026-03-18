@@ -19,13 +19,30 @@ Copier-based template for Kaggle competition projects.
 ### Create a new project
 
 ```bash
-uvx copier copy gh:asherish/kaggle-template my-competition
+# 1. Create a GitHub repository
+gh repo create <your-username>/<project-name> --private
+
+# 2. Clone via ghq
+ghq get git@github.com:<your-username>/<project-name>.git
+
+# 3. Generate project from template
+cd ~/ghq/github.com/<your-username>/<project-name>
+uvx copier copy gh:asherish/kaggle-template .
+
+# 4. Initial commit (skip pre-commit hooks on first commit)
+git add -A && git commit --no-verify -m "Initial commit from template"
+
+# 5. Trust mise config and set up environment
+mise trust && mise run uv-setup
+
+# 6. Push
+git push -u origin main
 ```
 
 ### Update an existing project with template changes
 
 ```bash
-cd my-competition
+cd <project-name>
 uvx copier update -A
 ```
 
