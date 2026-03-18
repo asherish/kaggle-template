@@ -1,0 +1,46 @@
+[env]
+PYTHONPATH = "."
+
+[tools]
+uv = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+
+[tasks.docker-build]
+description = "Build and start GPU Docker container"
+run = "docker compose up -d --build"
+
+[tasks.docker-build-cpu]
+description = "Build and start CPU Docker container"
+run = "docker compose -f compose.cpu.yaml up -d --build"
+
+[tasks.docker-bash]
+description = "Open a bash shell in the GPU container"
+run = "docker compose exec kaggle bash"
+
+[tasks.docker-jupyter]
+description = "Start JupyterLab in the GPU container"
+run = "docker compose exec kaggle jupyter lab --allow-root --ip=0.0.0.0 --port=8889 --no-browser --NotebookApp.token=''"
+
+[tasks.uv-setup]
+description = "Setup Python environment with uv"
+run = ["uv python pin 3.10", "uv venv", "uv sync --group dev", "uv run pre-commit install"]
+
+[tasks.fmt]
+description = "Format and lint code with ruff"
+run = ["uv run ruff format .", "uv run ruff check . --fix"]
+
+[tasks.type-check]
+description = "Run type checking with ty"
+run = "uv run ty check"
+
+[tasks.test]
+description = "Run tests with pytest"
+run = "uv run pytest tests/ -v"
+
+[tasks.upload-model]
+description = "Upload model to Kaggle Datasets"
+run = "uv run python tools/upload_model.py"
+
+[tasks.check-submission]
+description = "Check latest Kaggle submission status"
+run = "uv run python tools/check_submission.py --competition {{ kaggle_competition }}"
