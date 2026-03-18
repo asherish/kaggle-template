@@ -1,0 +1,21 @@
+services:
+  kaggle:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+    container_name: {{ project_name }}-cpu
+    volumes:
+      - ./input:/kaggle/input
+      - .:/kaggle/working
+      - ~/.kaggle:/root/.kaggle:ro
+      - ~/.cache:/root/.cache
+      - ~/.netrc:/root/.netrc:ro
+    environment:
+      - PYTHONPATH=/kaggle/working
+    working_dir: /kaggle/working
+    ports:
+      - "8889:8889"
+    command: /bin/bash
+    shm_size: "2gb"
+    tty: true
+    stdin_open: true
