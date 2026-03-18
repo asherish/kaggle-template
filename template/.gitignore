@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+
+# uv
+uv.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data and outputs (tracked via Kaggle Datasets, not git)
+/input/*
+!/input/.gitkeep
+/output/*
+!/output/.gitkeep
+
+# wandb
+wandb/
+
+# Ruff / ty cache
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.netrc
+.kaggle/
