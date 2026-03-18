@@ -1,0 +1,28 @@
+services:
+  kaggle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: {{ project_name }}-gpu
+    volumes:
+      - ./input:/kaggle/input
+      - .:/kaggle/working
+      - ~/.kaggle:/root/.kaggle:ro
+      - ~/.cache:/root/.cache
+      - ~/.netrc:/root/.netrc:ro
+    environment:
+      - PYTHONPATH=/kaggle/working
+    working_dir: /kaggle/working
+    ports:
+      - "8889:8889"
+    command: /bin/bash
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    shm_size: "16gb"
+    tty: true
+    stdin_open: true
