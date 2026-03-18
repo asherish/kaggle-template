@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=$(cat); FILE_PATH=$(echo \"$INPUT\" | jq -r \".tool_input.file_path // empty\"); if [[ \"$FILE_PATH\" == *.py ]]; then cd \"$CLAUDE_PROJECT_DIR\" && uv run ruff format \"$FILE_PATH\" 2>&1 && uv run ruff check \"$FILE_PATH\" --fix 2>&1 && uv run ty check 2>&1; fi; exit 0'",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
+  }
+}
