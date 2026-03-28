@@ -17,9 +17,17 @@ run = "docker compose -f compose.cpu.yaml up -d --build"
 description = "Open a bash shell in the GPU container"
 run = "docker compose exec kaggle bash"
 
+[tasks.docker-bash-cpu]
+description = "Open a bash shell in the CPU container"
+run = "docker compose -f compose.cpu.yaml exec kaggle bash"
+
 [tasks.docker-jupyter]
 description = "Start JupyterLab in the GPU container"
 run = "docker compose exec kaggle jupyter lab --allow-root --ip=0.0.0.0 --port=8889 --no-browser --NotebookApp.token=''"
+
+[tasks.docker-jupyter-cpu]
+description = "Start JupyterLab in the CPU container"
+run = "docker compose -f compose.cpu.yaml exec kaggle jupyter lab --allow-root --ip=0.0.0.0 --port=8889 --no-browser --NotebookApp.token=''"
 
 [tasks.uv-setup]
 description = "Setup Python environment with uv"
