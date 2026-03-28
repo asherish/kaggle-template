@@ -37,7 +37,7 @@ def _copy_matching_files(src_dir: Path, dst_dir: Path, patterns: list[str]) -> i
 @click.option("--new", "is_new", is_flag=True, help="Create a new dataset instead of updating.")
 def main(title: str, src_dir: str, patterns: str, user_name: str, is_new: bool) -> None:
     """Upload model artifacts to Kaggle Datasets."""
-    from kaggle.api.kaggle_api_extended import KaggleApi  # ty: ignore[unresolved-import]
+    from kaggle.api.kaggle_api_extended import KaggleApi
 
     pattern_list = [p.strip() for p in patterns.split(",")]
     src_path = Path(src_dir)
