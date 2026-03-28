@@ -22,7 +22,7 @@ Kaggle competition project using Hydra + wandb for experiment management.
 
 ## Conventions
 
-- Python 3.10 (matches Kaggle environment)
+- Python 3.11
 - Line length: 120
 - Use `pathlib.Path`, not `os.path`
 - Type hints on all function signatures
