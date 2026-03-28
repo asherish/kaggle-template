@@ -44,3 +44,7 @@ run = "uv run python tools/upload_model.py"
 [tasks.check-submission]
 description = "Check latest Kaggle submission status"
 run = "uv run python tools/check_submission.py --competition {{ kaggle_competition }}"
+
+[tasks.download-dataset]
+description = "Download competition dataset from Kaggle"
+run = "uv run python tools/download_dataset.py --competition {{ kaggle_competition }}"
