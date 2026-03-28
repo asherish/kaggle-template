@@ -37,7 +37,7 @@ def main(competition: str, interval: int) -> None:
             assert sub is not None
             if sub.ref == latest_ref:
                 status = sub.status
-                public_score = sub.publicScore  # ty: ignore[possibly-unbound]
+                public_score = sub.publicScore  # ty: ignore[unresolved-attribute]
                 found = True
                 break
 
