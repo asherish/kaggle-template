@@ -26,7 +26,7 @@ def _extract_and_remove_zips(directory: Path) -> int:
 @click.option("--force", is_flag=True, help="Force re-download even if files exist.")
 def main(competition: str, dest: str, file_name: str | None, unzip: bool, force: bool) -> None:
     """Download competition dataset from Kaggle."""
-    from kaggle.api.kaggle_api_extended import KaggleApi
+    from kaggle.api.kaggle_api_extended import KaggleApi  # ty: ignore[unresolved-import]
 
     dest_path = Path(dest)
 

@@ -11,7 +11,7 @@ import click
 @click.option("--interval", default=60, help="Polling interval in seconds.")
 def main(competition: str, interval: int) -> None:
     """Check the latest Kaggle submission status."""
-    from kaggle.api.kaggle_api_extended import KaggleApi
+    from kaggle.api.kaggle_api_extended import KaggleApi  # ty: ignore[unresolved-import]
 
     api = KaggleApi()
     api.authenticate()

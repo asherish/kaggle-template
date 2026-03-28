@@ -65,7 +65,7 @@ def main(cfg: Config) -> None:
     git_hash = get_git_hash()
 
     # --- Derive experiment name ---
-    exp_name = f"{Path(sys.argv[0]).parent.name}/{HydraConfig.get().runtime.choices.exp}"
+    exp_name = f"{Path(sys.argv[0]).parent.name}/{HydraConfig.get().runtime.choices.exp}"  # ty: ignore[unresolved-attribute]
 
     # --- Setup output ---
     output_dir = Path(cfg.env.exp_output_dir) / exp_name
@@ -83,7 +83,7 @@ def main(cfg: Config) -> None:
         name=exp_name,
         notes=", ".join(HydraConfig.get().overrides.task),
         config={
-            **OmegaConf.to_container(cfg, resolve=True),
+            **OmegaConf.to_container(cfg, resolve=True),  # ty: ignore[invalid-argument-type]
             "git_hash": git_hash,
         },
         mode="disabled" if cfg.exp.debug else "online",
