@@ -14,9 +14,8 @@ TOKEN_PATH = Path.home() / ".kaggle" / "access_token"
 @click.option("--browse", is_flag=True, help="Open Kaggle settings page in browser.")
 def main(browse: bool) -> None:
     """Save a Kaggle API token to ~/.kaggle/access_token."""
-    if TOKEN_PATH.exists():
-        if not click.confirm(f"Token already exists at {TOKEN_PATH}. Overwrite?"):
-            raise SystemExit(0)
+    if TOKEN_PATH.exists() and not click.confirm(f"Token already exists at {TOKEN_PATH}. Overwrite?"):
+        raise SystemExit(0)
 
     if browse:
         click.echo(f"Opening {KAGGLE_SETTINGS_URL} ...")
