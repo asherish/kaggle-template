@@ -47,6 +47,7 @@ dependencies = [
     # Utilities
     "tqdm",
     "click",
+    "kaggle",
     "psutil",
     "rich",
 ]
