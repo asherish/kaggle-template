@@ -11,7 +11,7 @@ import click
 @click.option("--interval", default=60, help="Polling interval in seconds.")
 def main(competition: str, interval: int) -> None:
     """Check the latest Kaggle submission status."""
-    from kaggle.api.kaggle_api_extended import KaggleApi  # ty: ignore[unresolved-import]
+    from kaggle.api.kaggle_api_extended import KaggleApi
 
     api = KaggleApi()
     api.authenticate()
@@ -22,6 +22,7 @@ def main(competition: str, interval: int) -> None:
         raise SystemExit(1)
 
     latest = submissions[0]
+    assert latest is not None
     latest_ref = latest.ref
     submit_time = latest.date
     if submit_time.tzinfo is None:
@@ -32,10 +33,11 @@ def main(competition: str, interval: int) -> None:
     public_score = ""
     while status != "complete":
         found = False
-        for sub in api.competition_submissions(competition):
+        for sub in api.competition_submissions(competition) or []:
+            assert sub is not None
             if sub.ref == latest_ref:
                 status = sub.status
-                public_score = sub.publicScore
+                public_score = sub.publicScore  # ty: ignore[possibly-unbound]
                 found = True
                 break
 
