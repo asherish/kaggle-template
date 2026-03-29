@@ -77,3 +77,7 @@ known-first-party = ["{{ package_name }}", "utils", "experiments"]
 
 [tool.ty.environment]
 python-version = "3.11"
+
+[[tool.ty.src.exclude]]
+# Standalone scripts run via `uv run` with inline dependencies (PEP 723)
+path = "tools/kaggle_login.py"
