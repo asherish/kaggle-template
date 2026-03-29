@@ -1,5 +1,6 @@
 ---
 name: kaggle-browse
+user-invocable: true
 description: "Browse Kaggle pages (competitions, notebooks, discussions, leaderboards) with authenticated access via MCP Playwright. Use this skill whenever the user wants to view, read, or extract information from Kaggle web pages — including competition overviews, notebook code/output/figures, discussion threads, leaderboard standings, or any Kaggle content. Also trigger when the user shares a Kaggle URL, asks about a competition's rules/evaluation/timeline/prizes, says 'check Kaggle', 'look at that notebook', or 'what's the leaderboard look like'."
 argument-hint: "[url or description of what to browse]"
 allowed-tools:
