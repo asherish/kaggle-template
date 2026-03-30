@@ -8,7 +8,10 @@ services:
       - ./input:/kaggle/input
       - .:/kaggle/working
       - ~/.kaggle:/root/.kaggle:ro
-      - ~/.cache:/root/.cache
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ~/.cache/torch:/root/.cache/torch
+      - ~/.cache/pip:/root/.cache/pip
+      - ~/.cache/uv:/root/.cache/uv
       - ~/.netrc:/root/.netrc:ro
     environment:
       - PYTHONPATH=/kaggle/working
