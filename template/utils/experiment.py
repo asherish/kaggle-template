@@ -4,10 +4,8 @@ import dataclasses
 import logging
 from collections.abc import Generator
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
-
-import wandb
 
 from utils.git import check_git_clean, get_git_hash
 from utils.logger import get_logger
@@ -54,24 +52,26 @@ def run_experiment(
 
     # --- Git check ---
     if not debug:
-        allowed: set[str] = set()
+        allowed: set[str] | None = None
         if config_path is not None:
-            allowed.add(str(Path(config_path).resolve().relative_to(project_root)))
-        check_git_clean(allowed_files=allowed or None)
+            allowed = {str(Path(config_path).resolve().relative_to(project_root))}
+        check_git_clean(allowed_files=allowed)
     git_hash = get_git_hash()
 
     # --- Output directory ---
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     output_dir = project_root / "output" / "experiments" / exp_name / timestamp
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # --- Logger ---
-    logger = get_logger(exp_name, output_dir)
+    logger = get_logger(exp_name, output_dir, timestamp=timestamp)
     logger.info("Experiment: %s", exp_name)
     logger.info("Git hash: %s", git_hash)
     logger.info("Config: %s", params_dict)
 
     # --- W&B ---
+    import wandb
+
     wandb.init(
         project=WANDB_PROJECT,
         entity=WANDB_ENTITY,

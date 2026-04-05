@@ -5,12 +5,14 @@ import time
 from pathlib import Path
 
 
-def get_logger(name: str, log_dir: Path | str) -> logging.Logger:
+def get_logger(name: str, log_dir: Path | str, *, timestamp: str | None = None) -> logging.Logger:
     """Create a logger that writes to both console and a timestamped log file.
 
     Args:
         name: Logger name (typically the experiment name).
         log_dir: Directory where the log file will be created.
+        timestamp: Optional pre-computed timestamp for the log filename.
+            If None, a new timestamp is generated.
 
     Returns:
         Configured logger instance.
@@ -34,7 +36,7 @@ def get_logger(name: str, log_dir: Path | str) -> logging.Logger:
     # File handler
     log_dir = Path(log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    timestamp = timestamp or time.strftime("%Y%m%d_%H%M%S")
     file_handler = logging.FileHandler(log_dir / f"{timestamp}.log")
     file_handler.setFormatter(fmt)
     logger.addHandler(file_handler)

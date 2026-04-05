@@ -20,11 +20,12 @@ def check_git_clean(*, allowed_files: set[str] | None = None) -> None:
         text=True,
         check=True,
     )
-    if not result.stdout.strip():
+    output = result.stdout.strip()
+    if not output:
         return
 
     dirty: list[str] = []
-    for line in result.stdout.strip().splitlines():
+    for line in output.splitlines():
         # porcelain format: "XY filename" (3-char prefix)
         filename = line[3:]
         if allowed_files and filename in allowed_files:
