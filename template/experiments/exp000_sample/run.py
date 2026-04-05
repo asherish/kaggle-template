@@ -60,12 +60,15 @@ def main(
     raw.update({k: v for k, v in overrides.items() if v is not None})
     params = Params(**raw)
 
-    with run_experiment(
-        experiment_dir=EXPERIMENT_DIR,
-        params_dict=params.model_dump(),
-        debug=params.debug,
-        config_path=config_path,
-    ) as ctx, trace("training"):
+    with (
+        run_experiment(
+            experiment_dir=EXPERIMENT_DIR,
+            params_dict=params.model_dump(),
+            debug=params.debug,
+            config_path=config_path,
+        ) as ctx,
+        trace("training"),
+    ):
         for fold in params.folds:
             ctx.logger.info("Processing fold %d", fold)
             # TODO: Implement training logic here

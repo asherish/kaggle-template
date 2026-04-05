@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 
-from utils.git import check_git_clean, get_git_hash
+from utils.git import check_git_clean, get_git_hash, get_project_root
 from utils.logger import get_logger
 
 WANDB_PROJECT = "{{ wandb_project }}"
@@ -47,7 +47,7 @@ def run_experiment(
         config_path: Path to the config file. If provided, this file is excluded
             from the git-clean check so config edits don't block a run.
     """
-    project_root = experiment_dir.parent.parent
+    project_root = get_project_root()
     exp_name = experiment_dir.name
 
     # --- Git check ---
@@ -72,23 +72,23 @@ def run_experiment(
     # --- W&B ---
     import wandb
 
-    wandb.init(
-        project=WANDB_PROJECT,
-        entity=WANDB_ENTITY,
-        name=f"{exp_name}/{timestamp}",
-        config={**params_dict, "git_hash": git_hash},
-        mode="disabled" if debug else "online",
-    )
-
-    ctx = ExperimentContext(
-        output_dir=output_dir,
-        logger=logger,
-        git_hash=git_hash,
-        exp_name=exp_name,
-        timestamp=timestamp,
-    )
-
     try:
+        wandb.init(
+            project=WANDB_PROJECT,
+            entity=WANDB_ENTITY,
+            name=f"{exp_name}/{timestamp}",
+            config={**params_dict, "git_hash": git_hash},
+            mode="disabled" if debug else "online",
+        )
+
+        ctx = ExperimentContext(
+            output_dir=output_dir,
+            logger=logger,
+            git_hash=git_hash,
+            exp_name=exp_name,
+            timestamp=timestamp,
+        )
+
         yield ctx
     finally:
         wandb.finish()
