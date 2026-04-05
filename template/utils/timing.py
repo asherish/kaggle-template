@@ -1,5 +1,6 @@
 """Performance measurement context managers."""
 
+import logging
 import sys
 import time
 from collections.abc import Generator
@@ -9,13 +10,12 @@ import psutil
 
 
 @contextmanager
-def trace(title: str) -> Generator[None, None, None]:
+def trace(title: str, *, logger: logging.Logger | None = None) -> Generator[None, None, None]:
     """Measure execution time and memory usage of a block.
-
-    Prints elapsed time and memory delta to stderr.
 
     Args:
         title: Label for the traced block.
+        logger: If provided, log via logger.info instead of printing to stderr.
     """
     process = psutil.Process()
     mem_before = process.memory_info().rss / (1024**3)  # GB
@@ -25,22 +25,28 @@ def trace(title: str) -> Generator[None, None, None]:
 
     elapsed = time.time() - t0
     mem_after = process.memory_info().rss / (1024**3)  # GB
-    print(
+    msg = (
         f"[{title}] elapsed: {elapsed:.1f}s, "
-        f"memory: {mem_before:.2f}GB -> {mem_after:.2f}GB (delta: {mem_after - mem_before:+.2f}GB)",
-        file=sys.stderr,
+        f"memory: {mem_before:.2f}GB -> {mem_after:.2f}GB (delta: {mem_after - mem_before:+.2f}GB)"
     )
+    if logger:
+        logger.info(msg)
+    else:
+        print(msg, file=sys.stderr)
 
 
 @contextmanager
-def timer(title: str) -> Generator[None, None, None]:
+def timer(title: str, *, logger: logging.Logger | None = None) -> Generator[None, None, None]:
     """Measure execution time of a block.
-
-    Prints elapsed time to stdout.
 
     Args:
         title: Label for the timed block.
+        logger: If provided, log via logger.info instead of printing to stderr.
     """
     t0 = time.time()
     yield
-    print(f"[{title}] {time.time() - t0:.1f}s")
+    msg = f"[{title}] {time.time() - t0:.1f}s"
+    if logger:
+        logger.info(msg)
+    else:
+        print(msg, file=sys.stderr)
