@@ -33,6 +33,9 @@ wandb/
 # Ruff / ty cache
 .ruff_cache/
 
+# Playwright MCP
+.playwright-mcp/
+
 # OS
 .DS_Store
 Thumbs.db
