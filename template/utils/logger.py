@@ -1,7 +1,7 @@
 """Dual logging to file and console."""
 
 import logging
-import time
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -36,7 +36,7 @@ def get_logger(name: str, log_dir: Path | str, *, timestamp: str | None = None) 
     # File handler
     log_dir = Path(log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = timestamp or time.strftime("%Y%m%d_%H%M%S")
+    timestamp = timestamp or datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     file_handler = logging.FileHandler(log_dir / f"{timestamp}.log")
     file_handler.setFormatter(fmt)
     logger.addHandler(file_handler)
