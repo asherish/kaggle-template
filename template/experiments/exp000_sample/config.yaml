@@ -1,12 +1,4 @@
-defaults:
-  - _self_
-  - exp: default
-  - env: default
-  - override hydra/job_logging: none
-
-hydra:
-  output_subdir: null
-  job:
-    chdir: False
-  run:
-    dir: .
+seed: 7
+learning_rate: 0.001
+batch_size: 32
+folds: [0, 1, 2, 3, 4]

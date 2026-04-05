@@ -5,8 +5,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Install packages not in Kaggle base image
 RUN pip install --no-cache-dir \
-    "hydra-core>=1.3" \
-    "omegaconf"
+    "pydantic>=2.0" \
+    "pyyaml"
 
 WORKDIR /kaggle/working
 CMD ["/bin/bash"]

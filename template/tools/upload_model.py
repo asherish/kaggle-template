@@ -30,7 +30,7 @@ def _copy_matching_files(src_dir: Path, dst_dir: Path, patterns: list[str]) -> i
 @click.option("--dir", "src_dir", default="./output/experiments", help="Source directory to scan.")
 @click.option(
     "--patterns",
-    default="best_model.pt,best_model.pth,best_model.bin,.hydra/*.yaml",
+    default="best_model.pt,best_model.pth,best_model.bin",
     help="Comma-separated file name patterns to include.",
 )
 @click.option("--user-name", default="{{ kaggle_username }}", help="Kaggle username.")

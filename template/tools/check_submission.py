@@ -1,7 +1,7 @@
 """Poll Kaggle submission status until scoring completes."""
 
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import click
 
@@ -26,7 +26,7 @@ def main(competition: str, interval: int) -> None:
     latest_ref = latest.ref
     submit_time = latest.date
     if submit_time.tzinfo is None:
-        submit_time = submit_time.replace(tzinfo=timezone.utc)
+        submit_time = submit_time.replace(tzinfo=UTC)
     click.echo(f"Tracking submission: {latest_ref}")
 
     status = ""
@@ -45,7 +45,7 @@ def main(competition: str, interval: int) -> None:
             click.echo("Submission no longer found. It may have been deleted.", err=True)
             raise SystemExit(1)
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         elapsed_min = int((now - submit_time).total_seconds() / 60) + 1
 
         if status == "complete":

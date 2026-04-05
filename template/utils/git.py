@@ -7,10 +7,12 @@ class GitDirtyError(Exception):
     """Raised when the working tree has uncommitted changes."""
 
 
-def check_git_clean() -> None:
+def check_git_clean(*, allowed_files: set[str] | None = None) -> None:
     """Raise GitDirtyError if the git working tree is dirty.
 
     Checks staged, unstaged, and untracked files via ``git status --porcelain``.
+    Files listed in *allowed_files* (paths relative to the repo root) are
+    ignored so that config files can be modified without blocking a run.
     """
     result = subprocess.run(
         ["git", "status", "--porcelain"],
@@ -18,11 +20,22 @@ def check_git_clean() -> None:
         text=True,
         check=True,
     )
-    if result.stdout.strip():
+    if not result.stdout.strip():
+        return
+
+    dirty: list[str] = []
+    for line in result.stdout.strip().splitlines():
+        # porcelain format: "XY filename" (3-char prefix)
+        filename = line[3:]
+        if allowed_files and filename in allowed_files:
+            continue
+        dirty.append(line)
+
+    if dirty:
         raise GitDirtyError(
             "Working tree has uncommitted changes. "
             "Commit or stash changes before running experiments.\n"
-            f"Dirty files:\n{result.stdout}"
+            "Dirty files:\n" + "\n".join(dirty)
         )
 
 

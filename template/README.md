@@ -39,9 +39,9 @@ python -m experiments.exp000_sample.run exp=000 exp.debug=true
 ### Creating a New Experiment
 
 1. Copy `experiments/exp000_sample/` to `experiments/exp001_yourname/`
-2. Edit `run.py`: define your `ExpConfig` dataclass and training logic
-3. Add minor version configs in `exp/000.yaml`, `exp/001.yaml`, ...
-4. Run: `python -m experiments.exp001_yourname.run exp=000`
+2. Edit `run.py`: define your `Params` model and training logic
+3. Edit `config.yaml` with your hyperparameters
+4. Run: `python -m experiments.exp001_yourname.run`
 
 ## Kaggle Tools
 
