@@ -11,16 +11,13 @@ from pathlib import Path
 
 import click
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from utils.experiment import run_experiment
 from utils.timing import trace
 
 EXPERIMENT_DIR = Path(__file__).resolve().parent
 DEFAULT_CONFIG = EXPERIMENT_DIR / "config.yaml"
-
-
-# --- Config ---
 
 
 class Params(BaseModel):
@@ -32,8 +29,13 @@ class Params(BaseModel):
     batch_size: int = Field(default=32, gt=0)
     folds: list[int] = Field(default=[0, 1, 2, 3, 4])
 
-
-# --- Main ---
+    @field_validator("folds", mode="before")
+    @classmethod
+    def parse_folds(cls, v: str | list[int]) -> list[int]:
+        """Accept comma-separated string (e.g. '0,1,2') or list."""
+        if isinstance(v, str):
+            return [int(x.strip()) for x in v.split(",")]
+        return v
 
 
 @click.command()
@@ -51,25 +53,13 @@ def main(
     batch_size: int | None,
     folds: str | None,
 ) -> None:
-    # --- Load config ---
     with open(config_path) as f:
         raw: dict = yaml.safe_load(f) or {}
 
-    # --- Apply CLI overrides ---
-    if debug is not None:
-        raw["debug"] = debug
-    if seed is not None:
-        raw["seed"] = seed
-    if learning_rate is not None:
-        raw["learning_rate"] = learning_rate
-    if batch_size is not None:
-        raw["batch_size"] = batch_size
-    if folds is not None:
-        raw["folds"] = [int(f) for f in folds.split(",")]
-
+    overrides = {"debug": debug, "seed": seed, "learning_rate": learning_rate, "batch_size": batch_size, "folds": folds}
+    raw.update({k: v for k, v in overrides.items() if v is not None})
     params = Params(**raw)
 
-    # --- Run experiment ---
     with run_experiment(
         experiment_dir=EXPERIMENT_DIR,
         params_dict=params.model_dump(),
