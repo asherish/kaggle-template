@@ -1,10 +1,39 @@
 """Git utilities for experiment reproducibility."""
 
 import subprocess
+from pathlib import Path
 
 
-class GitDirtyError(Exception):
+class GitError(Exception):
+    """Base class for git-related errors."""
+
+
+class GitDirtyError(GitError):
     """Raised when the working tree has uncommitted changes."""
+
+
+def _run_git(*args: str) -> str:
+    """Run a git command and return stripped stdout.
+
+    Raises GitError with a user-friendly message if the command fails.
+    """
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise GitError(
+            f"git {' '.join(args)} failed (exit {exc.returncode}): {exc.stderr.strip() or exc.stdout.strip()}"
+        ) from exc
+    return result.stdout.strip()
+
+
+def get_project_root() -> Path:
+    """Return the root directory of the current git repository."""
+    return Path(_run_git("rev-parse", "--show-toplevel"))
 
 
 def check_git_clean(*, allowed_files: set[str] | None = None) -> None:
@@ -14,13 +43,7 @@ def check_git_clean(*, allowed_files: set[str] | None = None) -> None:
     Files listed in *allowed_files* (paths relative to the repo root) are
     ignored so that config files can be modified without blocking a run.
     """
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    output = result.stdout.strip()
+    output = _run_git("status", "--porcelain")
     if not output:
         return
 
@@ -42,10 +65,4 @@ def check_git_clean(*, allowed_files: set[str] | None = None) -> None:
 
 def get_git_hash() -> str:
     """Return the current HEAD commit hash (short form)."""
-    result = subprocess.run(
-        ["git", "rev-parse", "--short", "HEAD"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return result.stdout.strip()
+    return _run_git("rev-parse", "--short", "HEAD")
