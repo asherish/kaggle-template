@@ -28,3 +28,11 @@ Kaggle competition project using Click + Pydantic + wandb for experiment managem
 - Type hints on all function signatures
 - Click + Pydantic for configuration (no argparse)
 - Module execution: `python -m experiments.<name>.run`
+
+## Kaggle CLI
+
+- Run any kaggle command: `uv run kaggle <command>`
+- Authenticate: `uv run kaggle auth login` (OAuth) or create API key from https://www.kaggle.com/settings/api
+- Download data: `mise run download-dataset` or `uv run kaggle competitions download -c <slug>`
+- Check submission: `mise run check-submission`
+- Browse forums: `uv run kaggle forums topics list`
